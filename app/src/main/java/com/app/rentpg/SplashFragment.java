@@ -1,8 +1,12 @@
 package com.app.rentpg;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import android.os.Handler;
@@ -50,11 +54,20 @@ public class SplashFragment extends Fragment {
         }
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_splash, container, false);
+
+        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+
 
        new Timer().schedule(new TimerTask() {
            @Override
@@ -62,8 +75,10 @@ public class SplashFragment extends Fragment {
                Intent intent= new Intent(getContext(), HomeActivity.class);
                //intent.putExtra("screen","setting");
                startActivity(intent);
+               getActivity().finish();
            }
        },3000);
+
         Toast.makeText(requireContext(), "switching screen", Toast.LENGTH_SHORT).show();
 
         return view;
