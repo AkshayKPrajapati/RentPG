@@ -72,6 +72,8 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
+
+
     private void loadFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
