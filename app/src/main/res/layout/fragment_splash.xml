@@ -1,16 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
     tools:context=".SplashFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <!-- App Name in Center -->
     <TextView
+        android:id="@+id/appName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Splash Screen" />
+        android:textColor="@color/yellow_main_color"
+        android:textStyle="bold"
+        android:textSize="28sp"
+        android:text="@string/app_name" />
+
+    <!-- Version Name at Bottom -->
+    <TextView
+        android:id="@+id/versionName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/developBy"
+        android:layout_marginBottom="16dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="#FFFFFF"
+        android:text="v1.0.0" />
+
+    <!-- Version Code just below Version Name -->
+    <TextView
+        android:id="@+id/developBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="#AAAAAA"
+        android:layout_alignParentBottom="true"
+        android:text="Develop By Akshay " />
 
 </RelativeLayout>

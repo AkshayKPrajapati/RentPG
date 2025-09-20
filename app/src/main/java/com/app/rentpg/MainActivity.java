@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -13,11 +14,19 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
+        // Force Dark Theme
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
+        // Set status & nav bar color
         getWindow().setStatusBarColor(Color.parseColor("#FF000000"));
+        getWindow().setNavigationBarColor(Color.parseColor("#FF000000"));
+
         setContentView(R.layout.activity_main);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container), (v, insets) -> {
@@ -26,11 +35,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
-
-        String screen= getIntent().getStringExtra("screen");
-
-        Fragment fragment;
+        String screen = getIntent().getStringExtra("screen");
 
         if (screen == null) {
             screen = "default";
@@ -46,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
 
             case "notic":
-                // call the fragment's own newInstance() method
                 newLoadFragment(NoticFragment.newInstance("param1", "param2"));
                 break;
 
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                 newLoadFragment(new SplashFragment());
         }
     }
+
 
     private void newLoadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();

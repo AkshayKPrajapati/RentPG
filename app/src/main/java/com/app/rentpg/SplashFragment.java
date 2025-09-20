@@ -1,20 +1,25 @@
 package com.app.rentpg;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Debug;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.app.rentpg.admin.AdminActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,65 +27,83 @@ import java.util.TimerTask;
 
 public class SplashFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public SplashFragment() {
         // Required empty public constructor
     }
 
 
-    public static SplashFragment newInstance(String param1, String param2) {
-        SplashFragment fragment = new SplashFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("ResourceAsColor")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view= inflater.inflate(R.layout.fragment_splash, container, false);
+        View view = inflater.inflate(R.layout.fragment_splash, container, false);
 
-        ViewCompat.setOnApplyWindowInsetsListener(view.findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
+        TextView versionName = view.findViewById(R.id.versionName);
+        TextView developBy = view.findViewById(R.id.developBy);
+
+
+        try {
+            Context context = getContext(); // or requireContext()
+            PackageInfo pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+
+            String vName = pInfo.versionName;
+            int vCode = pInfo.versionCode;
+
+            versionName.setText("v" + vName +"."+ vCode);
+            developBy.setText("Develop By Akshay");
+            developBy.setTextColor(Color.parseColor("#FFE400"));
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        TextView appName=view.findViewById(R.id.appName);
+        appName.setAlpha(0f);
+        appName.animate()
+                .alpha(1f)
+                .setDuration(2000) // 2 seconds
+                .setListener(null);
+
+
+        appName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent= new Intent(requireContext(),AdminActivity.class);
+                requireActivity().startActivity(intent);
+
+
+               // requireActivity().startActivity(new Intent(requireContext(), AdminActivity.class));
+                Toast.makeText(requireActivity(), "AdminScreenOpen", Toast.LENGTH_SHORT).show();
+            }
         });
 
 
+        // Debug checks
+        /*
+        if (BuildConfig.DEBUG) {
+            Toast.makeText(requireContext(), "App built in Debug mode", Toast.LENGTH_SHORT).show();
+        }
 
-       new Timer().schedule(new TimerTask() {
-           @Override
-           public void run() {
-               Intent intent= new Intent(getContext(), HomeActivity.class);
-               //intent.putExtra("screen","setting");
-               startActivity(intent);
-               getActivity().finish();
-           }
-       },3000);
+         */
 
-        Toast.makeText(requireContext(), "switching screen", Toast.LENGTH_SHORT).show();
+        if (Debug.isDebuggerConnected()) {
+            Toast.makeText(requireContext(), "Debugger is attached", Toast.LENGTH_SHORT).show();
+        }
+        /*
+        Switch to the main Screen
+         */
+        view.postDelayed(() -> {
+            if (isAdded()) {
+                Intent intent = new Intent(requireActivity(), HomeActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
+            }
+        }, 3000);
 
-        return view;
+
+        return  view;
     }
 }
