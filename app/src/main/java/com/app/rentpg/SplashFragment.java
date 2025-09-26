@@ -1,28 +1,21 @@
 package com.app.rentpg;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
-
 import androidx.fragment.app.Fragment;
 
-import android.os.Debug;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.app.rentpg.admin.AdminActivity;
-
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 public class SplashFragment extends Fragment {
@@ -66,38 +59,13 @@ public class SplashFragment extends Fragment {
                 .setDuration(2000) // 2 seconds
                 .setListener(null);
 
-
-        appName.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent intent= new Intent(requireContext(),AdminActivity.class);
-                requireActivity().startActivity(intent);
-
-
-               // requireActivity().startActivity(new Intent(requireContext(), AdminActivity.class));
-                Toast.makeText(requireActivity(), "AdminScreenOpen", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
-        // Debug checks
-        /*
-        if (BuildConfig.DEBUG) {
-            Toast.makeText(requireContext(), "App built in Debug mode", Toast.LENGTH_SHORT).show();
-        }
-
-         */
-
-        if (Debug.isDebuggerConnected()) {
-            Toast.makeText(requireContext(), "Debugger is attached", Toast.LENGTH_SHORT).show();
-        }
         /*
         Switch to the main Screen
          */
-        view.postDelayed(() -> {
-            if (isAdded()) {
-                Intent intent = new Intent(requireActivity(), HomeActivity.class);
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (getActivity() != null) {
+                Intent intent = new Intent(requireActivity(), MainActivity.class);
+                intent.putExtra("screen", "login");
                 startActivity(intent);
                 requireActivity().finish();
             }

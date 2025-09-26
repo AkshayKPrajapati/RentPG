@@ -54,6 +54,10 @@ public class MainActivity extends AppCompatActivity {
                 newLoadFragment(NoticFragment.newInstance("param1", "param2"));
                 break;
 
+            case "login":
+                newLoadFragment(new LoginFragment());
+                break;
+
             default:
                 newLoadFragment(new SplashFragment());
         }
