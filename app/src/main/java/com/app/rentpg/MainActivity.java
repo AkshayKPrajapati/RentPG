@@ -57,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
             case "login":
                 newLoadFragment(new LoginFragment());
                 break;
+            case "customerSingUp":
+                newLoadFragment(new SignFragment());
+                break;
 
             default:
                 newLoadFragment(new SplashFragment());
