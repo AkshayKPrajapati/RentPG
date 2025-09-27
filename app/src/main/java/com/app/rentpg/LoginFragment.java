@@ -73,13 +73,15 @@ public class LoginFragment extends Fragment {
             boolean valid = username.equals("admin") && password.equals("admin");
 
             if (valid) {
-                Toast.makeText(getContext(), "Login successful as " + role, Toast.LENGTH_SHORT).show();
+                if(role.equalsIgnoreCase("Customer")){
+                    Toast.makeText(getContext(), "Login successful as " + role, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(requireActivity(), CustomerDashBoardActivity.class);
+                    startActivity(intent);
+                    requireActivity().finish();
 
-                // Example: Open MainActivity with role
-                Intent intent = new Intent(requireActivity(), MainActivity.class);
-                intent.putExtra("screen", role); // You can handle this in MainActivity
-                startActivity(intent);
-                requireActivity().finish();
+                }
+
+
             } else {
                 Toast.makeText(getContext(), "Invalid credentials for " + role, Toast.LENGTH_SHORT).show();
             }

@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RentPg">
         <activity
+            android:name=".CustomerDashBoardActivity"
+            android:exported="false" />
+        <activity
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
