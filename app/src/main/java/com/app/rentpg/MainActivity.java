@@ -14,7 +14,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class MainActivity extends AppCompatActivity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,19 +22,25 @@ public class MainActivity extends AppCompatActivity {
         // Force Dark Theme
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
-        // Set status & nav bar color
+        // Set status & navigation bar color
         getWindow().setStatusBarColor(Color.parseColor("#FF000000"));
         getWindow().setNavigationBarColor(Color.parseColor("#FF000000"));
 
         setContentView(R.layout.activity_main);
 
+        // Apply padding for system bars (safe insets)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.fragment_container), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        String screen = getIntent().getStringExtra("screen");
+        // Load appropriate screen based on intent extra
+        loadScreenFromIntent();
+    }
+
+    private void loadScreenFromIntent() {
+        String screen = getIntent() != null ? getIntent().getStringExtra("screen") : null;
 
         if (screen == null) {
             screen = "default";
@@ -57,7 +62,8 @@ public class MainActivity extends AppCompatActivity {
             case "login":
                 newLoadFragment(new LoginFragment());
                 break;
-            case "customerSingUp":
+
+            case "customerSignUp":
                 newLoadFragment(new SignFragment());
                 break;
 
@@ -66,10 +72,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void newLoadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
+
+        // Use commit() or commitAllowingStateLoss() based on your use case
         transaction.commit();
+        // transaction.commitAllowingStateLoss(); // Uncomment this if you see fragment commit timing issues
     }
 }

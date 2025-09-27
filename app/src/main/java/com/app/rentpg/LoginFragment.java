@@ -19,7 +19,8 @@ public class LoginFragment extends Fragment {
     private EditText etUsername, etPassword;
     private RadioGroup radioGroup;
     private Button button;
-    TextView forgotPassword,signUpAccount;
+    private TextView forgotPassword, signUpAccount;
+
     public LoginFragment() {
         // Required empty public constructor
     }
@@ -27,7 +28,6 @@ public class LoginFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
         // Initialize views
@@ -35,8 +35,9 @@ public class LoginFragment extends Fragment {
         etPassword = view.findViewById(R.id.etPassword);
         radioGroup = view.findViewById(R.id.roleGroup);
         button = view.findViewById(R.id.btnLogin);
-        forgotPassword=view.findViewById(R.id.forgotPassword);
-        signUpAccount=view.findViewById(R.id.signUpAccount);
+        forgotPassword = view.findViewById(R.id.forgotPassword);
+        signUpAccount = view.findViewById(R.id.signUpAccount);
+
         return view;
     }
 
@@ -44,109 +45,80 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Set hints
+        // Set input hints
         etUsername.setHint("Enter Username");
         etPassword.setHint("Enter Password");
 
-        // Handle login button click
+        // Login Button Click
         button.setOnClickListener(v -> {
             String username = etUsername.getText().toString().trim();
-
             String password = etPassword.getText().toString().trim();
 
-            if(username.isEmpty() || password.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty()) {
                 Toast.makeText(getContext(), "Please enter username and password", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             // Get selected role
             int selectedId = radioGroup.getCheckedRadioButtonId();
-            String role = "Customer"; // default
-            if(selectedId == R.id.rbOwner) {
-                role = "Owner";
-            } else if(selectedId == R.id.rbAdmin) {
-                role = "Admin";
-            }
+            String role = "Customer"; // Default
 
-            // Validate credentials based on role
-            boolean valid = false;
-            if(role.equalsIgnoreCase("Admin") && username.equals("admin") && password.equals("admin")) {
-                valid = true;
-            } else if(role.equalsIgnoreCase("Owner") && username.equals("admin") && password.equals("admin")) {
-                valid = true;
-            } else if(role.equalsIgnoreCase("Customer") && username.equals("admin") && password.equals("admin")) {
-                valid = true;
-            }
-
-            if(valid) {
-                Toast.makeText(getContext(), "Login successful as " + role, Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(requireActivity(), MainActivity.class);
-//                intent.putExtra("screen", role); // pass the role to MainActivity
-//                startActivity(intent);
-//                requireActivity().finish();
-            } else {
-                Toast.makeText(getContext(), "Invalid credentials for " + role, Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        signUpAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int selectedId = radioGroup.getCheckedRadioButtonId();
-
-                // Default role
-                String role = "Customer";
-
-                // Determine selected role
-                if (selectedId == R.id.rbOwner) {
-                    role = "Owner";
-                } else if (selectedId == R.id.rbAdmin) {
-                    role = "Admin";
-                }
-
-                // Role-based action
-                if (role.equalsIgnoreCase("Customer")) {
-                    Toast.makeText(getContext(), "Customer account selected", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                intent.putExtra("screen", "customerSingUp"); // pass the role to MainActivity
-                startActivity(intent);
-                requireActivity().finish();
-                    // TODO: Handle customer sign-up logic
-                } else if (role.equalsIgnoreCase("Owner")) {
-                    Toast.makeText(getContext(), "Owner account selected", Toast.LENGTH_SHORT).show();
-                    // TODO: Handle owner sign-up logic
-                } else if (role.equalsIgnoreCase("Admin")) {
-                    Toast.makeText(getContext(), "Admin account selected", Toast.LENGTH_SHORT).show();
-                    // TODO: Handle admin sign-up logic
-                }
-            }
-        });
-
-        signUpAccount.setOnClickListener(v -> {
-            int selectedId = radioGroup.getCheckedRadioButtonId();
-
-            // Default role
-            String role = "Customer";
-
-            // Determine selected role
             if (selectedId == R.id.rbOwner) {
                 role = "Owner";
             } else if (selectedId == R.id.rbAdmin) {
                 role = "Admin";
             }
 
-            if (role.equalsIgnoreCase("Customer")) {
-                Toast.makeText(getContext(), "Customer account selected", Toast.LENGTH_SHORT).show();
-                // TODO: Handle customer sign-up logic
-            } else if (role.equalsIgnoreCase("Owner")) {
-                Toast.makeText(getContext(), "Owner account selected", Toast.LENGTH_SHORT).show();
-                // TODO: Handle owner sign-up logic
-            } else if (role.equalsIgnoreCase("Admin")) {
-                Toast.makeText(getContext(), "Admin account selected", Toast.LENGTH_SHORT).show();
-                // TODO: Handle admin sign-up logic
+            // Dummy credential check (you can replace this with real DB/Firebase logic)
+            boolean valid = username.equals("admin") && password.equals("admin");
+
+            if (valid) {
+                Toast.makeText(getContext(), "Login successful as " + role, Toast.LENGTH_SHORT).show();
+
+                // Example: Open MainActivity with role
+                Intent intent = new Intent(requireActivity(), MainActivity.class);
+                intent.putExtra("screen", role); // You can handle this in MainActivity
+                startActivity(intent);
+                requireActivity().finish();
+            } else {
+                Toast.makeText(getContext(), "Invalid credentials for " + role, Toast.LENGTH_SHORT).show();
             }
         });
 
+        // SignUp Click Listener
+        signUpAccount.setOnClickListener(v -> {
+            int selectedId = radioGroup.getCheckedRadioButtonId();
+            String role = "Customer"; // default
 
+            if (selectedId == R.id.rbOwner) {
+                role = "Owner";
+            } else if (selectedId == R.id.rbAdmin) {
+                role = "Admin";
+            }
+
+            switch (role.toLowerCase()) {
+                case "customer":
+                    Toast.makeText(getContext(), "Customer account selected", Toast.LENGTH_SHORT).show();
+                    Intent customerIntent = new Intent(requireActivity(), MainActivity.class);
+                    customerIntent.putExtra("screen", "customerSignUp");
+                    startActivity(customerIntent);
+                    requireActivity().finish();
+                    break;
+
+                case "owner":
+                    Toast.makeText(getContext(), "Owner account selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to OwnerSignUpActivity
+                    break;
+
+                case "admin":
+                    Toast.makeText(getContext(), "Admin account selected", Toast.LENGTH_SHORT).show();
+                    // TODO: Navigate to AdminSignUpActivity or handle logic
+                    break;
+
+                default:
+                    Toast.makeText(getContext(), "Invalid role selected", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        });
     }
 }
